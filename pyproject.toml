@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "smart-device-client"
+version = "0.1.0"
+description = "Client for the SMART_DEVICE_APP calibre wireless device"
+authors = ["David Buckley <david@davidbuckley.ca>"]
+license = "MIT"
+readme = 'README.md'
+
+[tool.poetry.dependencies]
+python = "^3.9"
+pyzmq = "^22.3.0"
+
+[tool.poetry.dev-dependencies]
+black = "^21.11b1"
+mypy = "^0.910"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
