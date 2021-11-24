@@ -150,6 +150,32 @@ class SmartDeviceClient:
     def on_error(self, payload: CalibrePayload) -> Optional[ResponsePayload]:
         logger.debug("ERROR: %s", payload)
 
+    # FIXME: There is a bug somewhere in this client, presenting itself in on_free_space
+    #        although I am not convinced it's actually a bug _with_ on_free_space. 
+    # 
+    #        The first time calibre sends us a FREE_SPACE message, everything goes great,
+    #        but it makes multiple requests, 2 on connection and one every time you
+    #        "update cached metadata on device". All of those subsequent calls fail.
+    #
+    #        ERROR: Error: Error communicating with device
+    #
+    #        'free_space_on_device'
+    #
+    #        Traceback (most recent call last):
+    #          File "calibre/gui2/device.py", line 89, in run
+    #          File "calibre/gui2/device.py", line 546, in _sync_booklists
+    #          File "calibre/devices/smart_device_app/driver.py", line 50, in _synchronizer
+    #          File "calibre/devices/smart_device_app/driver.py", line 1283, in free_space
+    #        KeyError: 'free_space_on_device'
+    #
+    #        I don't see how we could not be sending an object that has the free_space_on_device key
+    #        since there is no logic in this method, we just return a dict with that key, and the debug
+    #        logs indicate that that's what we're sending
+    #
+    #        DEBUG:smart_device_client.smart_device_client:[5, {}]
+    #        WARNING:smart_device_client.smart_device_client:FREE_SPACE received but not implemented: {}
+    #        DEBUG:smart_device_client.smart_device_client:sending: "[b'\x00k\x8bEg', b'41[0, {"free_space_on_device": 1073741824}]']"
+    #
     def on_free_space(self, payload: CalibrePayload) -> ResponsePayload:
         logger.warning("FREE_SPACE received but not implemented: %s", payload)
         return (SmartDeviceOpcode.OK, {"free_space_on_device": 1024 * 1024 * 1024})
