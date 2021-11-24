@@ -101,15 +101,15 @@ class SmartDeviceClient:
         # This is what I get for trying to make things nice for consumers and hiding the complexity
 
         # calibre wants to close the socket, time to disconnect
-        if payload.get("ejecting") is not None:
+        if 'ejecting' in payload:
             # self.disconnected_by_server = true
             # self:disconnect()
             return (SmartDeviceOpcode.OK, {})
         # calibre announces the count of books that need more metadata
-        elif payload.get("count") is not None:
+        elif 'count' in payload:
             return
         # calibre requests more metadata for a book by its index
-        elif payload.get("priKey") is not None:
+        elif 'priKey' in payload:
             # TODO
             # local book = CalibreMetadata:getBookMetadata(arg.priKey)
             # logger.dbg(string.format("sending book metadata %d/%d", self.current, self.pending))
@@ -193,6 +193,10 @@ class SmartDeviceClient:
         # calibre_version = ".".join(map(str, payload["calibre_version"]))
 
         # TODO: handle auth
+        # Also, kinda weird auth format
+        # effectivly we set up a shared secret used to hash "challenge" and verify we both can produce the same hash
+        # It's less of a password and more of a key.
+        # Is this done because we're just using TCP, so we don't want to transmit the plaintext password to the server?
         # local getPasswordHash = function()
         #     local password = G_reader_settings:readSetting("calibre_wireless_password")
         #     local challenge = arg.passwordChallenge
@@ -203,7 +207,7 @@ class SmartDeviceClient:
         #     end
         #
 
-        # TODO: Looks like we're going toh ave to formalize some configuration spec
+        # TODO: Looks like we're going to have to formalize some configuration spec
         init_info = {
             "appName": CLIENT_NAME,  # TODO: Configurable
             "acceptedExtensions": VALID_EXTENSIONS,  # TODO: Configurable
