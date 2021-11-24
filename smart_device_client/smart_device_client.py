@@ -41,9 +41,6 @@ class SmartDeviceOpcode(IntEnum):
 
 
 ResponsePayload = Tuple[SmartDeviceOpcode, Dict]
-WirelessCallback = Callable[
-    ["SmartDeviceClient", SmartDeviceOpcode, CalibrePayload], Optional[ResponsePayload]
-]
 
 CLIENT_NAME = "smart-device-client"
 DEVICE = "Kobo"
