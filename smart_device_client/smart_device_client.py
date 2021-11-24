@@ -3,7 +3,7 @@ import json
 import logging
 import re
 import socket
-from typing import Tuple, Optional, Callable, Dict
+from typing import Tuple, Optional, Dict
 
 import zmq
 
@@ -330,7 +330,7 @@ class SmartDeviceClient:
         socket.send_multipart(multipart)
 
     @staticmethod
-    def zeroconf_client() -> Optional["SmartDeviceClient"]:  # type: ignore
+    def find_calibre_server() -> Optional["SmartDeviceClient"]:  # type: ignore
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM, socket.IPPROTO_UDP)
         sock.setsockopt(socket.SOL_SOCKET, socket.SO_BROADCAST, 1)
         sock.settimeout(5)
